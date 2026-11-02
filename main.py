@@ -11,23 +11,19 @@ options = Options()
 options.add_argument("--user-data-dir=C:/selenium_profiles/my_scraper")
 driver = webdriver.Chrome(options=options)
 
-driver.get("https://instelikes.com/en/")
-time.sleep(2)
+driver.get("https://instelikes.com/en/app")
+input("")
 
-continue_browser_btn = driver.find_element(By.CLASS_NAME, "download-btn.secondary").click()
-time.sleep(3)
+# home_page_canvas = driver.find_element(By.TAG_NAME, "canvas")
 
-driver.execute_script("""
-document.addEventListener('contextmenu', function(e) {
-    e.stopImmediatePropagation();
-}, true);
+# print(home_page_canvas.size)
+
+from selenium.webdriver.common.by import By
+
+result = driver.execute_script("""
+return [...document.querySelectorAll('*')].filter(el => {
+    return el.outerHTML && el.outerHTML.includes('/pictures/7662424577461145806');
+}).map(el => el.outerHTML);
 """)
-time.sleep(6)
-element = WebDriverWait(driver, 20).until(
-    EC.element_to_be_clickable((
-        By.XPATH,
-        "//*[contains(normalize-space(.), 'Connect')]"
-    ))
-)
-driver.execute_script("arguments[0].click();", element)
-time.sleep(5)
+
+print(result)
